@@ -4,7 +4,6 @@ import (
 	"context"
 	"os"
 	"os/signal"
-	"runtime"
 	"syscall"
 	"time"
 )
@@ -22,21 +21,26 @@ func Uptime() time.Duration {
 	return time.Since(startTime)
 }
 
-// DoGCWhen one of the given signal happens (GC means runtime.GC()).
+// DoOnSignal runs fn on every signal.
 // Function is async, context is used to close underlying goroutine.
-// In most cases appx.DoGCWhen(os.SIGUSR1) should be enough.
-func DoGCWhen(ctx context.Context, signals ...os.Signal) {
-	ch := make(chan os.Signal, 1)
-	signal.Notify(ch, signals...)
+func DoOnSignal(ctx context.Context, signal os.Signal, fn func(ctx context.Context)) {
+	ch := newChan(signal)
 
 	go func() {
 		for {
 			select {
+			case <-ch:
+				fn(ctx)
 			case <-ctx.Done():
 				return
-			case <-ch:
-				runtime.GC()
 			}
 		}
 	}()
+}
+
+// newChan returns a channel triggered on every sig.
+func newChan(sig os.Signal) <-chan os.Signal {
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, sig)
+	return ch
 }

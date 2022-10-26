@@ -2,7 +2,9 @@ package appx
 
 import (
 	"context"
+	"os"
 	"os/signal"
+	"runtime"
 	"syscall"
 	"time"
 )
@@ -18,4 +20,23 @@ func Context() context.Context {
 // Uptime of the application.
 func Uptime() time.Duration {
 	return time.Since(startTime)
+}
+
+// DoGCWhen one of the given signal happens (GC means runtime.GC()).
+// Function is async, context is used to close underlying goroutine.
+// In most cases appx.DoGCWhen(os.SIGUSR1) should be enough.
+func DoGCWhen(ctx context.Context, signals ...os.Signal) {
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, signals...)
+
+	go func() {
+		for {
+			select {
+			case <-ctx.Done():
+				return
+			case <-ch:
+				runtime.GC()
+			}
+		}
+	}()
 }

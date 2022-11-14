@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 	"time"
 )
@@ -19,6 +20,26 @@ func Context() context.Context {
 // Uptime of the application.
 func Uptime() time.Duration {
 	return time.Since(startTime)
+}
+
+var (
+	env     string
+	envOnce sync.Once
+)
+
+// Env returns application environment set via SetEnv func.
+func Env() string {
+	return env
+}
+
+// SetEnv for the application. Can be called once, all next calls panics.
+// This function should be called at the start of the application.
+func SetEnv(v string) {
+	if env != "" {
+		panic("appx: SetEnv cannot be called twice")
+	}
+
+	envOnce.Do(func() { env = v })
 }
 
 // DoOnSignal runs fn on every signal.

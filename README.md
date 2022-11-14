@@ -6,7 +6,7 @@
 [![coverage-img]][coverage-url]
 [![version-img]][version-url]
 
-Go library for building applications. Dramatically simple. For a CLI tool see [acmd](https://github.com/cristalhq/acmd).
+Go library for building applications. Dramatically simple. For a CLI tool see [cristalhq/acmd](https://github.com/cristalhq/acmd).
 
 ## Features
 

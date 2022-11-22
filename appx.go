@@ -42,9 +42,9 @@ func SetEnv(v string) {
 	envOnce.Do(func() { env = v })
 }
 
-// DoOnSignal runs fn on every signal.
+// OnSignal run fn.
 // Function is async, context is used to close underlying goroutine.
-func DoOnSignal(ctx context.Context, signal os.Signal, fn func(ctx context.Context)) {
+func OnSignal(ctx context.Context, signal os.Signal, fn func(ctx context.Context)) {
 	ch := newChan(signal)
 
 	go func() {

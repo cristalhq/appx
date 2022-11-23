@@ -4,6 +4,7 @@ import (
 	"context"
 	"os"
 	"os/signal"
+	"runtime/debug"
 	"sync"
 	"syscall"
 	"time"
@@ -64,4 +65,24 @@ func newChan(sig os.Signal) <-chan os.Signal {
 	ch := make(chan os.Signal, 1)
 	signal.Notify(ch, sig)
 	return ch
+}
+
+// BuildInfo of the app (if -buildvcs flag provided).
+func BuildInfo() (revision string, at time.Time, isModified, ok bool) {
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return "", time.Time{}, false, false
+	}
+
+	for _, setting := range info.Settings {
+		switch setting.Key {
+		case "vcs.revision":
+			revision = setting.Value
+		case "vcs.time":
+			at, _ = time.Parse(time.RFC3339, setting.Value)
+		case "vcs.modified":
+			isModified = setting.Value == "true"
+		}
+	}
+	return revision, at, isModified, true
 }

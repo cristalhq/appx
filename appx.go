@@ -2,6 +2,7 @@ package appx
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"os/signal"
 	"runtime/debug"
@@ -85,4 +86,17 @@ func BuildInfo() (revision string, at time.Time, isModified, ok bool) {
 		}
 	}
 	return revision, at, isModified, true
+}
+
+// SendInterrupt signal to the current process.
+func SendInterrupt() error {
+	proc, err := os.FindProcess(os.Getpid())
+	if err != nil {
+		return fmt.Errorf("unable to find own pid: %w", err)
+	}
+
+	if err := proc.Signal(os.Interrupt); err != nil {
+		return fmt.Errorf("signal: %w", err)
+	}
+	return nil
 }

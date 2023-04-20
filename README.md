@@ -2,8 +2,6 @@
 
 [![build-img]][build-url]
 [![pkg-img]][pkg-url]
-[![reportcard-img]][reportcard-url]
-[![coverage-img]][coverage-url]
 [![version-img]][version-url]
 
 Go library for building applications. Dramatically simple. For a CLI tool see [cristalhq/acmd](https://github.com/cristalhq/acmd).
@@ -14,11 +12,11 @@ Go library for building applications. Dramatically simple. For a CLI tool see [c
 * Dependency-free.
 * Dramatically simple.
 
-See [GUIDE.md](https://github.com/cristalhq/appx/blob/main/GUIDE.md) for more details
+See [these docs][pkg-url] or [GUIDE.md](https://github.com/cristalhq/appx/blob/main/GUIDE.md) for more details.
 
 ## Install
 
-Go version 1.17+
+Go version 1.18+
 
 ```
 go get github.com/cristalhq/appx
@@ -48,11 +46,7 @@ func run(ctx context.Context, args []string) error {
 }
 ```
 
-Also see examples: [examples_test.go](https://github.com/cristalhq/appx/blob/main/example_test.go).
-
-## Documentation
-
-See [these docs][pkg-url].
+See examples: [example_test.go](https://github.com/cristalhq/appx/blob/main/example_test.go).
 
 ## License
 
@@ -62,9 +56,5 @@ See [these docs][pkg-url].
 [build-url]: https://github.com/cristalhq/appx/actions
 [pkg-img]: https://pkg.go.dev/badge/cristalhq/appx
 [pkg-url]: https://pkg.go.dev/github.com/cristalhq/appx
-[reportcard-img]: https://goreportcard.com/badge/cristalhq/appx
-[reportcard-url]: https://goreportcard.com/report/cristalhq/appx
-[coverage-img]: https://codecov.io/gh/cristalhq/appx/branch/main/graph/badge.svg
-[coverage-url]: https://codecov.io/gh/cristalhq/appx
 [version-img]: https://img.shields.io/github/v/release/cristalhq/appx
 [version-url]: https://github.com/cristalhq/appx/releases

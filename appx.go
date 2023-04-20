@@ -46,8 +46,8 @@ func SetEnv(v string) {
 
 // OnSignal run fn.
 // Function is async, context is used to close underlying goroutine.
-func OnSignal(ctx context.Context, signal os.Signal, fn func(ctx context.Context)) {
-	ch := newChan(signal)
+func OnSignal(ctx context.Context, sig os.Signal, fn func(ctx context.Context)) {
+	ch := newChan(sig)
 
 	go func() {
 		for {
@@ -88,14 +88,14 @@ func BuildInfo() (revision string, at time.Time, isModified, ok bool) {
 	return revision, at, isModified, true
 }
 
-// SendInterrupt signal to the current process.
-func SendInterrupt() error {
+// SelfSignal sends signal to the current process.
+func SelfSignal(sig os.Signal) error {
 	proc, err := os.FindProcess(os.Getpid())
 	if err != nil {
 		return fmt.Errorf("unable to find own pid: %w", err)
 	}
 
-	if err := proc.Signal(os.Interrupt); err != nil {
+	if err := proc.Signal(sig); err != nil {
 		return fmt.Errorf("signal: %w", err)
 	}
 	return nil

@@ -25,23 +25,34 @@ func Uptime() time.Duration {
 }
 
 var (
-	env     string
-	envOnce sync.Once
+	appEnv     string
+	appEnvOnce sync.Once
 )
 
-// Env returns application environment set via SetEnv func.
-func Env() string {
-	return env
-}
+// Env where application is running. Can be set via SetEnv func.
+func Env() string { return appEnv }
 
-// SetEnv for the application. Can be called once, all next calls panics.
+// SetEnv for the application from environment variable or a default.
+// Can be called once, all next calls panics.
+// Example:
+//
+//	appx.SetEnv("ENV", "dev") // set from ENV or set default "dev"
+//	appx.SetEnv("ENV", "") // set from ENV or leave unset
+//	appx.SetEnv("", "dev") // set "dev" directly
+//
 // This function should be called at the start of the application.
-func SetEnv(v string) {
-	if env != "" {
-		panic("appx: SetEnv cannot be called twice")
+func SetEnv(env, def string) {
+	if appEnv != "" {
+		panic("appx: SetEnv called twice")
 	}
 
-	envOnce.Do(func() { env = v })
+	appEnvOnce.Do(func() {
+		v := os.Getenv(env)
+		if v == "" {
+			v = def
+		}
+		appEnv = v
+	})
 }
 
 // OnSignal run fn.

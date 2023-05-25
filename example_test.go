@@ -7,6 +7,8 @@ import (
 	"github.com/cristalhq/appx"
 )
 
+func init() { appx.SetEnv("ENV", "dev") }
+
 func main() {
 	ctx := appx.Context()
 

@@ -41,7 +41,7 @@ func Env() string { return appEnv }
 //	appx.SetEnv("", "dev") // set "dev" directly
 //
 // This function should be called at the start of the application.
-func SetEnv(env, def string) {
+func SetEnv(env, def string) string {
 	if appEnv != "" {
 		panic("appx: SetEnv called twice")
 	}
@@ -53,6 +53,7 @@ func SetEnv(env, def string) {
 		}
 		appEnv = v
 	})
+	return appEnv
 }
 
 // OnSignal run fn.
